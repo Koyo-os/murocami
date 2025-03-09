@@ -5,6 +5,7 @@ import (
 	"os/exec"
 
 	"github.com/koyo-os/murocami/internal/config"
+	"github.com/koyo-os/murocami/internal/utils"
 	"github.com/koyo-os/murocami/pkg/logger"
 )
 
@@ -21,12 +22,37 @@ func Init(cfg *config.Config) (*Agent, error) {
 		return nil,err
 	}
 
+	defer os.RemoveAll(tempDir.Name())
+
 	return &Agent{
 		cfg: cfg,
 		Logger: logger.Init(),
 		Dir: tempDir.Name(),
 		TempDir: tempDir,
 	}, nil
+}
+
+func (a *Agent) Run(args []string) error {
+	a.Logger.Infof("starting agent for %s", args[1])
+
+	cloneUrl := args[1]
+
+	if err := utils.CloneRepo(cloneUrl, a.Dir);err != nil{
+		a.Logger.Error(err)
+		return err
+	}
+
+	if err := a.RunTests();err != nil{
+		a.Logger.Error(err)
+		return err
+	}
+
+	if err := a.RunBuild();err != nil{
+		a.Logger.Error(err)
+		return err
+	}
+
+	return nil
 }
 
 func (a *Agent) RunTests() error {
