@@ -1,10 +1,12 @@
 package config
 
 import (
+	"fmt"
+	"io"
 	"os"
 
 	"github.com/joho/godotenv"
-	"github.com/spf13/viper"
+	"gopkg.in/yaml.v3"
 )
 
 type Config struct{
@@ -34,18 +36,20 @@ func Init() (*Config, error) {
 		}, nil
 	}
 	
-	viper.SetConfigName("config")
-	viper.AddConfigPath(".")
-	viper.SetConfigType("yaml")
+	file, err := os.Open("config.yaml")
+	if err != nil{
+		return nil, fmt.Errorf("cant open config file: %v",err)
+	}
 
-	if err := viper.ReadInConfig();err != nil{
-		return nil,err
+	body,err := io.ReadAll(file)
+	if err != nil{
+		return nil, fmt.Errorf("cant read file: %v",err)
 	}
 
 	var cfg Config
 
-	if err := viper.Unmarshal(&cfg);err != nil{
-		return nil,err
+	if err = yaml.Unmarshal(body, &cfg);err != nil{
+		return nil, fmt.Errorf("cant unmarshal data: %v",err)
 	}
 
 	return &cfg, nil

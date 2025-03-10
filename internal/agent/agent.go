@@ -17,6 +17,9 @@ type Agent struct{
 }
 
 func Init(cfg *config.Config) (*Agent, error) {
+	logger := logger.Init()
+
+	logger.Infof("Creating temp for %s", cfg.TempDirName)
 	tempDir, err := os.CreateTemp("", cfg.TempDirName)
 	if err != nil{
 		return nil,err
@@ -26,7 +29,7 @@ func Init(cfg *config.Config) (*Agent, error) {
 
 	return &Agent{
 		cfg: cfg,
-		Logger: logger.Init(),
+		Logger: logger,
 		Dir: tempDir.Name(),
 		TempDir: tempDir,
 	}, nil
@@ -35,7 +38,7 @@ func Init(cfg *config.Config) (*Agent, error) {
 func (a *Agent) Run(url string) error {
 	a.Logger.Infof("starting agent for %s", url)
 
-	if err := utils.CloneRepo(url, a.Dir);err != nil{
+	if err := utils.CloneRepo(url, a.Dir, a.Logger);err != nil{
 		a.Logger.Error(err)
 		return err
 	}

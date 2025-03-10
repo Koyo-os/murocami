@@ -3,9 +3,11 @@ package utils
 import (
 	"fmt"
 	"os/exec"
+
+	"github.com/koyo-os/murocami/pkg/logger"
 )
 
-func CloneRepo(url,dir string) error {
+func CloneRepo(url,dir string, logger *logger.Logger) error {
 	cmd := exec.Command("git", "clone", url, dir)
 	output,err := cmd.CombinedOutput()
 	if err != nil{
