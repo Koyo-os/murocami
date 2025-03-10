@@ -32,12 +32,10 @@ func Init(cfg *config.Config) (*Agent, error) {
 	}, nil
 }
 
-func (a *Agent) Run(args []string) error {
-	a.Logger.Infof("starting agent for %s", args[1])
+func (a *Agent) Run(url string) error {
+	a.Logger.Infof("starting agent for %s", url)
 
-	cloneUrl := args[1]
-
-	if err := utils.CloneRepo(cloneUrl, a.Dir);err != nil{
+	if err := utils.CloneRepo(url, a.Dir);err != nil{
 		a.Logger.Error(err)
 		return err
 	}

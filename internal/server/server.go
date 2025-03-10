@@ -29,8 +29,13 @@ func (s *Server) Start() error {
 	return s.ListenAndServe()
 }
 
+func (s *Server) SetHandler(mux *http.ServeMux) {
+	s.Handler = mux
+}
+
 func (s *Server) Stop(ctx context.Context) {
 	s.logger.Info("server stopping...")
 
 	s.Shutdown(ctx)
 }
+

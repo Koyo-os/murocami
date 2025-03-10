@@ -4,7 +4,6 @@ import (
 	"fmt"
 
 	"github.com/sirupsen/logrus"
-	"gopkg.in/natefinch/lumberjack.v2"
 )
 
 type Logger struct{
@@ -46,16 +45,6 @@ func Init() *Logger {
     logger.SetFormatter(&CustomFormatter{})
 
     logger.SetReportCaller(true)
-
-    logger.SetLevel(logrus.DebugLevel)
-
-    logger.SetOutput(&lumberjack.Logger{
-        Filename:   "app.log", 
-        MaxSize:    10,        
-        MaxBackups: 3,        
-        MaxAge:     28,       
-        Compress:   true,    
-    })
 
 	return &Logger{logger}
 }

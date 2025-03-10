@@ -1,0 +1,5 @@
+port : 8080
+host : "localhost"
+temp_dir_name : "murocami-temp"
+input_point : "cmd/main.go"
+output_point : "bin/app"
