@@ -20,12 +20,10 @@ func Init(cfg *config.Config) (*Agent, error) {
 	logger := logger.Init()
 
 	logger.Infof("Creating temp for %s", cfg.TempDirName)
-	tempDir, err := os.CreateTemp("", cfg.TempDirName)
+	tempDir, err := os.Create(cfg.TempDirName)
 	if err != nil{
 		return nil,err
 	}
-
-	defer os.RemoveAll(tempDir.Name())
 
 	return &Agent{
 		cfg: cfg,
@@ -53,6 +51,8 @@ func (a *Agent) Run(url string) error {
 		return err
 	}
 
+	os.RemoveAll(a.cfg.TempDirName)
+
 	return nil
 }
 
@@ -64,7 +64,6 @@ func (a *Agent) RunTests() error {
 	output, err := cmd.CombinedOutput()
 	if err != nil{
 		a.Logger.Error(err)
-		return err
 	}
 
 	a.Logger.Infof("test output: %s", output)
@@ -75,6 +74,7 @@ func (a *Agent) RunBuild() error {
 	a.Logger.Info("starting build...")
 
 	cmd := exec.Command("go", "build", "-o", a.cfg.OutputPoint, a.cfg.InputPoint)
+	cmd.Dir = a.cfg.TempDirName
 	output,err := cmd.CombinedOutput()
 	if err != nil{
 		a.Logger.Error(err)

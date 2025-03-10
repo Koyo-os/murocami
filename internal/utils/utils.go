@@ -8,6 +8,8 @@ import (
 )
 
 func CloneRepo(url,dir string, logger *logger.Logger) error {
+	logger.Infof("cloning repo, url: %s", url)
+
 	cmd := exec.Command("git", "clone", url, dir)
 	output,err := cmd.CombinedOutput()
 	if err != nil{
