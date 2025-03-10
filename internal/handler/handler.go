@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"fmt"
 	"io"
 	"net/http"
 
@@ -72,6 +73,8 @@ func (h *Handler) WebHookHandler(w http.ResponseWriter, r *http.Request) {
 			}
         }()
     }
+
+	fmt.Fprint(w, "success!")
 
 	h.Logger.Info("github webhook recieved successfully!")
 }

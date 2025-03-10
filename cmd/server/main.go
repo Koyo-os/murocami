@@ -37,7 +37,7 @@ func main() {
 		logger.Info("murocami stopped!")
 		s.Stop(ctx)
 
-		os.RemoveAll(cfg.TempDirName)
+		os.Remove(cfg.TempDirName)
 	}()
 
 	err = s.Start()
