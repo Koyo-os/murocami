@@ -1,6 +1,11 @@
 package config
 
-import "github.com/spf13/viper"
+import (
+	"os"
+
+	"github.com/joho/godotenv"
+	"github.com/spf13/viper"
+)
 
 type Config struct{
 	Port string `yaml:"port"`
@@ -11,6 +16,24 @@ type Config struct{
 }
 
 func Init() (*Config, error) {
+	godotenv.Load(".env")
+
+	port := os.Getenv("PORT")
+	host := os.Getenv("HOST")
+	temp := os.Getenv("TEMP_DIR_NAME")
+	input := os.Getenv("INPUT_POINT")
+	output := os.Getenv("OUTPUT_POINT")
+
+	if port != "" && host != "" && temp != "" && input != "" && output != "" {
+		return &Config{
+			Host: host,
+			Port: port,
+			TempDirName: temp,
+			InputPoint: input,
+			OutputPoint: output,
+		}, nil
+	}
+	
 	viper.SetConfigName("config")
 	viper.AddConfigPath(".")
 	viper.SetConfigType("yaml")
