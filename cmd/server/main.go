@@ -1,7 +1,10 @@
 package main
 
 import (
+	"context"
 	"net/http"
+	"os"
+	"os/signal"
 
 	"github.com/koyo-os/murocami/internal/config"
 	"github.com/koyo-os/murocami/internal/handler"
@@ -10,6 +13,9 @@ import (
 )
 
 func main() {
+	ctx, cancel := signal.NotifyContext(context.Background(), os.Interrupt)
+	defer cancel()
+
 	logger := logger.Init()
 
 	cfg, err := config.Init()
@@ -26,8 +32,16 @@ func main() {
 	h.Routes(mux)
 	s.SetHandler(mux)
 
+	go func(){
+		<-ctx.Done()
+		logger.Info("murocami stopped!")
+		s.Stop(ctx)
+
+		os.RemoveAll(cfg.TempDirName)
+	}()
+
 	err = s.Start()
-	if err != nil{
+	if err != nil && err != http.ErrServerClosed{
 		logger.Errorf("cant run murocami: %v",err)
 	}
 }

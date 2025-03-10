@@ -10,7 +10,6 @@ import (
 )
 
 type Agent struct{
-	TempDir *os.File
 	Dir string
 	Logger *logger.Logger
 	cfg *config.Config
@@ -20,7 +19,7 @@ func Init(cfg *config.Config) (*Agent, error) {
 	logger := logger.Init()
 
 	logger.Infof("Creating temp for %s", cfg.TempDirName)
-	tempDir, err := os.Create(cfg.TempDirName)
+	err := os.Mkdir(cfg.TempDirName, 0755)
 	if err != nil{
 		return nil,err
 	}
@@ -28,8 +27,7 @@ func Init(cfg *config.Config) (*Agent, error) {
 	return &Agent{
 		cfg: cfg,
 		Logger: logger,
-		Dir: tempDir.Name(),
-		TempDir: tempDir,
+		Dir: cfg.TempDirName,
 	}, nil
 }
 
@@ -50,8 +48,6 @@ func (a *Agent) Run(url string) error {
 		a.Logger.Error(err)
 		return err
 	}
-
-	os.RemoveAll(a.cfg.TempDirName)
 
 	return nil
 }
