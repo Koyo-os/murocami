@@ -31,25 +31,29 @@ func Init(cfg *config.Config) (*Agent, error) {
 	}, nil
 }
 
-func (a *Agent) Run(url string) error {
+func (a *Agent) Run(url string) (bool, error) {
+	okAgent := true
+
 	a.Logger.Infof("starting agent for %s", url)
 
 	if err := utils.CloneRepo(url, a.Dir, a.Logger);err != nil{
 		a.Logger.Error(err)
-		return err
+		okAgent = false
+		return okAgent, err
 	}
 
 	if err := a.RunTests();err != nil{
 		a.Logger.Error(err)
-		return err
+		okAgent = false
 	}
 
 	if err := a.RunBuild();err != nil{
-		a.Logger.Error(err)
-		return err
+		a.Logger.Errorf("cant build: %v", err)
+		okAgent = false
+		return okAgent, err
 	}
 
-	return nil
+	return okAgent, nil
 }
 
 func (a *Agent) RunTests() error {

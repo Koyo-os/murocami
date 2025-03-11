@@ -35,14 +35,14 @@ func (h Handler) Routes(mux *http.ServeMux){
 	mux.HandleFunc("/webhook", h.WebHookHandler)
 }
 
-func (h *Handler) runAgent(url string) error {
-	err := h.Agent.Run(url)
+func (h *Handler) runAgent(url string) (bool, error) {
+	ok, err := h.Agent.Run(url)
 	if err != nil{
 		h.Logger.Errorf("error run agent: %v", err)
-		return err
+		return ok,err
 	}
 
-	return nil
+	return ok, nil
 }
 
 func (h *Handler) WebHookHandler(w http.ResponseWriter, r *http.Request) {
@@ -68,8 +68,14 @@ func (h *Handler) WebHookHandler(w http.ResponseWriter, r *http.Request) {
 		h.Logger.Info("starting agent...")
 
         go func() {
-			if err = h.runAgent(payload.Repository.CloneURL);err != nil{
-				h.Logger.Errorf("error to run agent: %v", err)
+			ok,err := h.runAgent(payload.Repository.CloneURL)
+			if err != nil{
+				h.Logger.Errorf("error run agent: %v",err)
+			}
+
+			if !ok {
+				h.Logger.Debugf("agent for %s stopped with !ok variable, please check your code", payload.Repository.CloneURL)
+				fmt.Fprintf(w, "agent for %s stopped with !ok variable, please check your code", payload.Repository.CloneURL)
 			}
         }()
     }
