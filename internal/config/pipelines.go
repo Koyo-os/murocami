@@ -3,6 +3,8 @@ package config
 type PipeLine struct{
 	Name string `yaml:"name"`
 	Cmd string `yaml:"cmd"`
+	MoreCmd bool `yaml:"more_cmd"`
+	Commands []string `yaml:"commands"`
 }
 
 type PipeLineConfig struct{

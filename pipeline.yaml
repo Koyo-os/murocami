@@ -1,0 +1,18 @@
+run_on: localhost
+service_name: my_service 
+cmds:  
+  - name: Build docker image
+    more_cmd : false
+    cmd: docker build -t app .
+  - name: Copy docker image
+    more_cmd : true
+    commands: |
+      docker save -o app.tar app
+      scp app.tar user@yourserver:/path/to
+  - name: Deploy
+    more_cmd : true
+    commands: |
+      ssh user@yourserver "docker load -i /path/to/destination/myapp.tar"
+      ssh user@yourserver "docker stop myapp || true"
+      ssh user@yourserver "docker rm myapp || true"
+      ssh user@yourserver "docker run -d --name myapp -p 80:80 myapp:latest"
