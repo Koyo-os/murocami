@@ -13,7 +13,7 @@ type Config struct{
 	Port string `yaml:"port"`
 	Host string `yaml:"host"`
 	TelegrammApiToken string `yaml:"telegramm_api_token"`
-	NotifyChatId string `yaml:"notify_chat_id"`
+	NotifyChatIds []string `yaml:"notify_chat_id"`
 	TempDirName string `yaml:"temp_dir_name"`
 	InputPoint string `yaml:"input_point"`
 	OutputPoint string `yaml:"output_point"`

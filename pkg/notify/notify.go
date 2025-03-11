@@ -6,6 +6,11 @@ import (
 	"github.com/nikoksr/notify/service/telegram"
 )
 
+type NotifyTheme string
+
+var OK_AGENT NotifyTheme = "ok_agent"
+var ERROR_AGENT NotifyTheme = "error_agent"
+
 type Notifyler struct{
 	tg *telegram.Telegram
 	logger *logger.Logger
@@ -21,4 +26,8 @@ func Init(cfg *config.Config) (*Notifyler, error) {
 		tg: service,
 		logger: logger.Init(),
 	}, nil
+}
+
+func (n *Notifyler) Send(themeid NotifyTheme) error {
+	
 }
