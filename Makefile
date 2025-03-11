@@ -8,4 +8,4 @@ run:
 	$(MAKE) build
 	$(OUTPUT)
 deps:
-	go mod 
+	go mod download
