@@ -15,6 +15,7 @@ type Config struct{
 	TempDirName string `yaml:"temp_dir_name"`
 	InputPoint string `yaml:"input_point"`
 	OutputPoint string `yaml:"output_point"`
+	UseScpForCD bool `yaml:"scp_for_cd"`
 }
 
 func Init() (*Config, error) {
