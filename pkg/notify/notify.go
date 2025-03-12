@@ -37,10 +37,6 @@ func Init(cfg *config.Config) (*Notifyler, error) {
 		return nil,err
 	}
 
-	for _, v := range cfg.NotifyChatIds {
-		service.AddReceivers(v)
-	}
-
 	return &Notifyler{
 		tg: service,
 		logger: logger.Init(),
@@ -48,6 +44,10 @@ func Init(cfg *config.Config) (*Notifyler, error) {
 }
 
 func (n *Notifyler) Send(themeid NotifyTheme) error {
+	for _, v := range n.cfg.NotifyChatIds {
+		n.tg.AddReceivers(v)
+	}
+
 	notify.UseServices(n.tg)
 
 	switch themeid{
