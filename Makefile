@@ -7,5 +7,10 @@ build:
 run:
 	$(MAKE) build
 	$(OUTPUT)
+build-js:
+	npm --prefix ./web run build:js
+
+build-css:
+	npm --prefix ./web run build:css
 deps:
 	go mod download

@@ -1,5 +1,13 @@
 package mainpage
 
+import "github.com/koyo-os/murocami/internal/view/layout"
+
 templ Mainpage() {
-    
+    @layout.MainPageLayout(layout.LayoutProps{
+        Title: "murocami",
+    }){
+        <h1>
+            Murocami test
+        </h1>
+    }
 }

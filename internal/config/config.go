@@ -12,6 +12,7 @@ import (
 type Config struct{ 
 	Port string `yaml:"port"`
 	Host string `yaml:"host"`
+	StaticDir string `yaml:"static_dir"`
 	SaveHistory bool `yaml:"save_history"`
 	FileHistory string `yaml:"file_history"`
 	TelegrammApiToken string `yaml:"telegramm_api_token"`
