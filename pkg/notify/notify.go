@@ -44,9 +44,7 @@ func Init(cfg *config.Config) (*Notifyler, error) {
 }
 
 func (n *Notifyler) Send(themeid NotifyTheme) error {
-	for _, v := range n.cfg.NotifyChatIds {
-		n.tg.AddReceivers(v)
-	}
+	n.tg.AddReceivers(n.cfg.NotifyChatIds)
 
 	notify.UseServices(n.tg)
 

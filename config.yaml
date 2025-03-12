@@ -7,6 +7,4 @@ scp_for_cd : true
 send_notify : false
 save_history : true
 file_history : history.json
-notify_chat_id : |
-  -12345567,
-  -243245365
+notify_chat_id : -12345567

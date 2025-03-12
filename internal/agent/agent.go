@@ -4,6 +4,7 @@ import (
 	"os"
 	"os/exec"
 
+	"github.com/koyo-os/murocami/internal/agent/history"
 	"github.com/koyo-os/murocami/internal/config"
 	"github.com/koyo-os/murocami/internal/utils"
 	"github.com/koyo-os/murocami/pkg/logger"
@@ -14,6 +15,7 @@ type Agent struct{
 	Logger *logger.Logger
 	cfg *config.Config
 	pipeRunner *PipeLineRunner
+	history *history.AgentHistory
 }
 
 func Init(cfg *config.Config) (*Agent, error) {
@@ -25,11 +27,22 @@ func Init(cfg *config.Config) (*Agent, error) {
 		return nil,err
 	}
 
-	return &Agent{
-		cfg: cfg,
-		Logger: logger,
-		Dir: cfg.TempDirName,
-	}, nil
+	if cfg.UseScpForCD {
+		return &Agent{
+			cfg: cfg,
+			Logger: logger,
+			Dir: cfg.TempDirName,
+			history: history.Init(cfg),
+			pipeRunner: InitPipelineRunner(cfg),
+		}, nil
+	} else {
+		return &Agent{
+			cfg: cfg,
+			Logger: logger,
+			Dir: cfg.TempDirName,
+			history: history.Init(cfg),
+		}, nil
+	}
 }
 
 func (a *Agent) Run(url string) (bool, error) {

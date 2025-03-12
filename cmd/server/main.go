@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"net/http"
 	"os"
 	"os/signal"
@@ -12,7 +13,23 @@ import (
 	"github.com/koyo-os/murocami/pkg/logger"
 )
 
+const ART = `
+
+
+███╗   ███╗██╗   ██╗██████╗  ██████╗  ██████╗ █████╗ ███╗   ███╗██╗
+████╗ ████║██║   ██║██╔══██╗██╔═══██╗██╔════╝██╔══██╗████╗ ████║██║
+██╔████╔██║██║   ██║██████╔╝██║   ██║██║     ███████║██╔████╔██║██║
+██║╚██╔╝██║██║   ██║██╔══██╗██║   ██║██║     ██╔══██║██║╚██╔╝██║██║
+██║ ╚═╝ ██║╚██████╔╝██║  ██║╚██████╔╝╚██████╗██║  ██║██║ ╚═╝ ██║██║
+╚═╝     ╚═╝ ╚═════╝ ╚═╝  ╚═╝ ╚═════╝  ╚═════╝╚═╝  ╚═╝╚═╝     ╚═╝╚═╝
+                                                                   
+
+
+`
+
 func main() {
+	fmt.Print(ART)
+
 	ctx, cancel := signal.NotifyContext(context.Background(), os.Interrupt)
 	defer cancel()
 
@@ -23,6 +40,8 @@ func main() {
 		logger.Errorf("cant get config: %v", err)
 		return
 	}
+
+	os.Remove(cfg.TempDirName)
 
 	s := server.Init(cfg)
 

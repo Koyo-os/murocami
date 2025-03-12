@@ -21,7 +21,7 @@ type PipeLineConfig struct{
 }
 
 func LoadPipeLineConfig() (*PipeLineConfig, error) {
-	file,err := os.Open("pipeline.yml")
+	file,err := os.Open("pipeline.yaml")
 	if err != nil{
 		return nil,err
 	}
