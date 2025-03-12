@@ -8,4 +8,4 @@ send_notify : false
 save_history : false
 file_history : history.json
 notify_chat_id : -12345567
-static_dir : web
+static_dir : "web/public/assets"

@@ -15,6 +15,7 @@ import (
 type Handler struct{
 	Logger *logger.Logger
 	Agent *agent.Agent
+	cfg *config.Config
 }
 
 func InitHandler(cfg *config.Config) *Handler {
@@ -28,11 +29,15 @@ func InitHandler(cfg *config.Config) *Handler {
 	return &Handler{
 		Logger: logger,
 		Agent: agent,
+		cfg: cfg,
 	}
 }
 
 func (h Handler) Routes(mux *http.ServeMux){
 	mux.HandleFunc("/webhook", h.WebHookHandler)
+	mux.HandleFunc("/ui", h.MainPage)
+
+	mux.Handle("/assets/", http.StripPrefix("/assets", http.FileServer(http.Dir(h.cfg.StaticDir))))
 }
 
 func (h *Handler) runAgent(url string) (bool, error) {

@@ -7,6 +7,8 @@ build:
 run:
 	$(MAKE) build
 	$(OUTPUT)
+ui:
+	templ generate internal/view
 build-js:
 	npm --prefix ./web run build:js
 
