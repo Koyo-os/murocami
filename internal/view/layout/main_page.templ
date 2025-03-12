@@ -1,0 +1,21 @@
+package layout
+
+type LayoutProps struct{
+    Title string
+}
+
+templ MainPageLayout(l LayoutProps) {
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>{l.Title}</title>
+    </head>
+    <body>
+        <script src="/assets/main.js"/>
+
+        {children...}
+    </body>
+    </html>
+}

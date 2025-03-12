@@ -11,6 +11,7 @@ require (
 )
 
 require (
+	github.com/a-h/templ v0.3.833 // indirect
 	github.com/bytedance/sonic/loader v0.2.4 // indirect
 	github.com/cloudwego/base64x v0.1.5 // indirect
 	github.com/davecgh/go-spew v1.1.2-0.20180830191138-d8f796af33cc // indirect
