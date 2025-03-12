@@ -20,7 +20,7 @@ type PipeLineConfig struct{
 	Cmds []PipeLine `yaml:"cmds"`
 }
 
-func Load() (*PipeLineConfig, error) {
+func LoadPipeLineConfig() (*PipeLineConfig, error) {
 	file,err := os.Open("pipeline.yml")
 	if err != nil{
 		return nil,err
