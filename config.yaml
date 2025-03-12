@@ -3,8 +3,8 @@ host : "localhost"
 temp_dir_name : "murocami-temp"
 input_point : "cmd/main.go"
 output_point : "bin/app"
-scp_for_cd : true
+scp_for_cd : false
 send_notify : false
-save_history : true
+save_history : false
 file_history : history.json
 notify_chat_id : -12345567
