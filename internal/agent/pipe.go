@@ -62,6 +62,7 @@ func (pipe *PipeLineRunner) RunPipeline() error {
 		pipe.logger.Infof("[PIPELINE] run now %s", p.Name)
 		parts := strings.Split(p.Cmd, " ")
 		cmd := exec.Command(parts[0], parts[1:]...)
+		cmd.Dir = pipe.cfg.TempDirName
 		output, err := cmd.CombinedOutput()
 		if err != nil{
 			pipe.logger.Errorf("[PIPELINE] name: %s, error to run: %v, with output %s", p.Name, err, output)

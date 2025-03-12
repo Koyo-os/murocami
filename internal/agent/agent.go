@@ -13,6 +13,7 @@ type Agent struct{
 	Dir string
 	Logger *logger.Logger
 	cfg *config.Config
+	pipeRunner *PipeLineRunner
 }
 
 func Init(cfg *config.Config) (*Agent, error) {
@@ -49,6 +50,12 @@ func (a *Agent) Run(url string) (bool, error) {
 
 	if err := a.RunBuild();err != nil{
 		a.Logger.Errorf("cant build: %v", err)
+		okAgent = false
+		return okAgent, err
+	}
+
+	if err := a.pipeRunner.RunPipeline();err != nil{
+		a.Logger.Errorf("error run pipeline: %v",err)
 		okAgent = false
 		return okAgent, err
 	}
