@@ -54,10 +54,12 @@ func (a *Agent) Run(url string) (bool, error) {
 		return okAgent, err
 	}
 
-	if err := a.pipeRunner.RunPipeline();err != nil{
-		a.Logger.Errorf("error run pipeline: %v",err)
-		okAgent = false
-		return okAgent, err
+	if a.cfg.UseScpForCD {
+		if err := a.pipeRunner.RunPipeline();err != nil{
+			a.Logger.Errorf("error run pipeline: %v",err)
+			okAgent = false
+			return okAgent, err
+		}
 	}
 
 	return okAgent, nil

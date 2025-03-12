@@ -12,6 +12,8 @@ import (
 type Config struct{ 
 	Port string `yaml:"port"`
 	Host string `yaml:"host"`
+	SaveHistory bool `yaml:"save_history"`
+	FileHistory string `yaml:"file_history"`
 	TelegrammApiToken string `yaml:"telegramm_api_token"`
 	SendNotify bool `yaml:"send_notify"`
 	NotifyChatIds []int64 `yaml:"notify_chat_id"`
