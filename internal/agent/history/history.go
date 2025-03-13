@@ -40,6 +40,22 @@ func (a *AgentHistory) Save(ok bool, message string) error {
 		return err
 	}
 
+	if string(body) == "" {
+		block := models.Block{
+			Message: message,
+			Ok: ok,
+			TimeStamp: time.Now().Format("2006-01-02 15:04:05"),
+		}
+
+		newbody,err := sonic.Marshal(&block)
+		if err != nil{
+			a.logger.Errorf("cant marshal new body: %v", err)
+			return err
+		}
+
+		a.file.Write(newbody)
+	}
+
 	var blocks []models.Block
 
 	if err = sonic.Unmarshal(body, &blocks);err != nil{

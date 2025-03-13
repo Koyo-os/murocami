@@ -18,6 +18,12 @@ type Agent struct{
 	history *history.AgentHistory
 }
 
+const ERROR_MESSAGE = `
+CI process not complited`
+
+const SUCCESS_MESSAGE = `
+CI process successfully complited`
+
 func Init(cfg *config.Config) (*Agent, error) {
 	logger := logger.Init()
 
@@ -72,6 +78,20 @@ func (a *Agent) Run(url string) (bool, error) {
 			a.Logger.Errorf("error run pipeline: %v",err)
 			okAgent = false
 			return okAgent, err
+		}
+	}
+
+	if a.cfg.SaveHistory {
+		var message string
+
+		if okAgent {
+			message = SUCCESS_MESSAGE
+		} else {
+			message = ERROR_MESSAGE
+		}
+
+		if err := a.history.Save(okAgent, message);err != nil{
+			a.Logger.Errorf("cant save history: %v",err)
 		}
 	}
 
