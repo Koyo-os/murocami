@@ -2,12 +2,20 @@ package mainpage
 
 import "github.com/koyo-os/murocami/internal/view/layout"
 
-templ Mainpage() {
+type MainPageProps struct{
+    History string
+}
+
+templ Mainpage(p MainPageProps) {
     @layout.MainPageLayout(layout.LayoutProps{
-        Title: "murocami",
+        Title: "Murocami",
     }){
-        <h1>
-            Murocami test
+        <h1 class="mono font-bold">
+            Murocami CI
         </h1>
+
+        <main>
+            {p.History}
+        </main>
     }
 }
