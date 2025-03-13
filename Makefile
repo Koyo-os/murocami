@@ -3,9 +3,6 @@ OUTPUT = bin/app
 INPUT = cmd/server/main.go
 
 build:
-	$(MAKE) build-css
-	$(MAKE) ui
-	$(MAKE) build-js
 	$(CC) build -o $(OUTPUT) $(INPUT)
 run:
 	$(MAKE) build
