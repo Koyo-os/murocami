@@ -1,0 +1,3 @@
+use_queue : false
+nats_url : default
+nats_theme : notify
