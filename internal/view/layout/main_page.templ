@@ -9,14 +9,23 @@ templ MainPageLayout(l LayoutProps) {
     <html lang="en">
     <head>
         <meta charset="UTF-8">
+        <link href="http://localhost:8080/assets/main.css" rel="stylesheet"> 
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link rel="stylesheet" href="/assets/main.css"/>
         <title>{l.Title}</title>
     </head>
-    <body>
-        {children...}
-         <script src="https://unpkg.com/htmx.org@2.0.4"></script>
+    <body>  
+         @Head()  
         <script src="/assets/main.js"/>
+        {children...}
     </body>
     </html>
+}
+
+
+templ Head() {
+    <header class="novbar bg-primary text-primary-content" hx-boost="true">
+        <div class="flex-none">
+            <a href="/ui" class="btn btn-ghost text-xl">Kap</a>
+        </div>
+    </header>
 }

@@ -22,6 +22,7 @@ type Config struct{
 	InputPoint string `yaml:"input_point"`
 	OutputPoint string `yaml:"output_point"`
 	UseScpForCD bool `yaml:"scp_for_cd"`
+	UseUI bool `yaml:"use_ui"`
 }
 
 func Init() (*Config, error) {

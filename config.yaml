@@ -6,6 +6,7 @@ output_point : "bin/app"
 scp_for_cd : false
 send_notify : false
 save_history : false
+use_ui : false
 file_history : history.json
 notify_chat_id : -12345567
 static_dir : "web/public/assets"

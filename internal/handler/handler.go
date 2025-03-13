@@ -37,7 +37,9 @@ func (h Handler) Routes(mux *http.ServeMux){
 	mux.HandleFunc("/webhook", h.WebHookHandler)
 	mux.HandleFunc("/ui", h.MainPage)
 
-	mux.Handle("/assets/", http.StripPrefix("/assets", http.FileServer(http.Dir(h.cfg.StaticDir))))
+	if h.cfg.UseUI {
+		mux.Handle("/assets/", http.StripPrefix("/assets/", http.FileServer(http.Dir(h.cfg.StaticDir))))
+	}
 }
 
 func (h *Handler) runAgent(url string) (bool, error) {
