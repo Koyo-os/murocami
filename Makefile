@@ -1,18 +1,4 @@
-CC = go
-OUTPUT = bin/app
-INPUT = cmd/server/main.go
-
-build:
-	$(CC) build -o $(OUTPUT) $(INPUT)
-run:
-	$(MAKE) build
-	$(OUTPUT)
-ui:
-	templ generate internal/view
-build-js:
-	npm --prefix ./web run build:js
-
-build-css:
-	npm --prefix ./web run build:css
+start:
+	./scripts/start.sh
 deps:
 	go mod download

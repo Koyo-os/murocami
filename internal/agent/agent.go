@@ -6,8 +6,10 @@ import (
 
 	"github.com/koyo-os/murocami/internal/agent/history"
 	"github.com/koyo-os/murocami/internal/config"
+	"github.com/koyo-os/murocami/internal/queue"
 	"github.com/koyo-os/murocami/internal/utils"
 	"github.com/koyo-os/murocami/pkg/logger"
+	"github.com/koyo-os/murocami/pkg/notify"
 )
 
 type Agent struct{
@@ -16,6 +18,9 @@ type Agent struct{
 	cfg *config.Config
 	pipeRunner *PipeLineRunner
 	history *history.AgentHistory
+	queue *queue.QueueRunner
+	queueCFG *config.QueueConfig
+	notify *notify.Notifyler
 }
 
 const ERROR_MESSAGE = `
@@ -33,22 +38,13 @@ func Init(cfg *config.Config) (*Agent, error) {
 		return nil,err
 	}
 
-	if cfg.UseScpForCD {
-		return &Agent{
-			cfg: cfg,
-			Logger: logger,
-			Dir: cfg.TempDirName,
-			history: history.Init(cfg),
-			pipeRunner: InitPipelineRunner(cfg),
-		}, nil
-	} else {
-		return &Agent{
-			cfg: cfg,
-			Logger: logger,
-			Dir: cfg.TempDirName,
-			history: history.Init(cfg),
-		}, nil
+	quecfg, err := config.InitQueueConfig()
+	if err != nil{
+		logger.Errorf("cant get que config: %v",err)
+		return nil, err
 	}
+
+	return initAgent(cfg, logger, cfg.TempDirName, quecfg)
 }
 
 func (a *Agent) Run(url string) (bool, error) {
