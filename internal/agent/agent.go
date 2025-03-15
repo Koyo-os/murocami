@@ -69,6 +69,11 @@ func (a *Agent) Run(url string) (bool, error) {
 		return okAgent, err
 	}
 
+	if err := a.RunLint();err != nil{
+		a.Logger.Errorf("error lint: %v", err)
+		return okAgent, err
+	}
+
 	if a.cfg.UseScpForCD {
 		if err := a.pipeRunner.RunPipeline();err != nil{
 			a.Logger.Errorf("error run pipeline: %v",err)
@@ -120,5 +125,21 @@ func (a *Agent) RunBuild() error {
 	}
 
 	a.Logger.Infof("build output: %s", output)
+	return nil
+}
+
+func (a *Agent) RunLint() error {
+	a.Logger.Info("starting lint...")
+
+	cmd := exec.Command("golangci-lint", "run")
+	cmd.Dir = a.Dir
+	output,err := cmd.CombinedOutput()
+	if err != nil{
+		a.Logger.Errorf("cant do lint: %v, with output: %s",err, output)
+		return err
+	}
+
+	a.Logger.Infof("lint output: %s", output)
+
 	return nil
 }
