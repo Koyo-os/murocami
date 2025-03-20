@@ -46,7 +46,7 @@ func Init(cfg *config.Config) (*Agent, error) {
 
 	notify, err := notify.Init(cfg)
 	if err != nil{
-		logger.Error("cant get history saver: %v", err)
+		logger.Errorf("cant get history saver: %v", err)
 		return nil, err
 	}
 

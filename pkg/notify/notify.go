@@ -32,7 +32,7 @@ type Notifyler struct{
 }
 
 func Init(cfg *config.Config) (*Notifyler, error) {
-	service, err := telegram.New(cfg.TelegrammApiToken)
+	service, err := telegram.New(cfg.NotifyCfg.Token)
 	if err != nil{
 		return nil,err
 	}
@@ -44,7 +44,7 @@ func Init(cfg *config.Config) (*Notifyler, error) {
 }
 
 func (n *Notifyler) Send(themeid NotifyTheme) error {
-	n.tg.AddReceivers(n.cfg.NotifyChatIds)
+	n.tg.AddReceivers(n.cfg.NotifyCfg.ChatID)
 
 	notify.UseServices(n.tg)
 
