@@ -20,9 +20,9 @@ type AgentHistory struct{
 func Init(cfg *config.Config) *AgentHistory {
 	logger := logger.Init()
 
-	file, err := os.Open(cfg.FileHistory)
+	file, err := os.Open(cfg.HistoryCfg.File)
 	if err != nil{
-		logger.Errorf("cant open %s: %v", cfg.FileHistory, err)
+		logger.Errorf("cant open %s: %v", cfg.HistoryCfg.File, err)
 		return nil
 	}
 
