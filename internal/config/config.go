@@ -9,15 +9,25 @@ import (
 	"gopkg.in/yaml.v3"
 )
 
+type HistoryCfg struct{
+	Save bool `yaml:"save"`
+	File string `yaml:"file"`
+}
+
+type NotifyCfg struct{
+	Send bool `yaml:"send"`
+	ChatID int64 `yaml:"chat_id"`
+	Token string `yaml:"token"`
+}
+
+
+
 type Config struct{ 
 	Port string `yaml:"port"`
 	Host string `yaml:"host"`
+	NotifyCfg NotifyCfg `yaml:"notify"`
+	HistoryCfg HistoryCfg `yaml:"history"`
 	StaticDir string `yaml:"static_dir"`
-	SaveHistory bool `yaml:"save_history"`
-	FileHistory string `yaml:"file_history"`
-	TelegrammApiToken string `yaml:"telegramm_api_token"`
-	SendNotify bool `yaml:"send_notify"`
-	NotifyChatIds int64 `yaml:"notify_chat_id"`
 	TempDirName string `yaml:"temp_dir_name"`
 	InputPoint string `yaml:"input_point"`
 	OutputPoint string `yaml:"output_point"`
@@ -61,7 +71,7 @@ func Init() (*Config, error) {
 		return nil, fmt.Errorf("cant unmarshal data: %v",err)
 	}
 
-	cfg.TelegrammApiToken = token
+	cfg.NotifyCfg.Token = token
 
 	return &cfg, nil
 }

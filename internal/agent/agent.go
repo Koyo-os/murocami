@@ -44,7 +44,22 @@ func Init(cfg *config.Config) (*Agent, error) {
 		return nil, err
 	}
 
-	return initAgent(cfg, logger, cfg.TempDirName, quecfg)
+	notify, err := notify.Init(cfg)
+	if err != nil{
+		logger.Error("cant get history saver: %v", err)
+		return nil, err
+	}
+
+	return &Agent{
+		queue: queue.Init(cfg),
+		queueCFG: quecfg,
+		history: history.Init(cfg),
+		pipeRunner: InitPipelineRunner(cfg),
+		notify: notify,
+		cfg: cfg,
+		Logger: logger,
+		Dir: cfg.TempDirName,
+	}, nil
 }
 
 func (a *Agent) Run(url string) (bool, error) {
@@ -82,7 +97,7 @@ func (a *Agent) Run(url string) (bool, error) {
 		}
 	}
 
-	if a.cfg.SaveHistory {
+	if a.cfg.HistoryCfg.Save {
 		var message string
 
 		if okAgent {
