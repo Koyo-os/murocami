@@ -4,7 +4,6 @@ import (
 	"os"
 	"os/exec"
 
-	"github.com/koyo-os/murocami/internal/agent/history"
 	"github.com/koyo-os/murocami/internal/config"
 	"github.com/koyo-os/murocami/internal/queue"
 	"github.com/koyo-os/murocami/internal/utils"
@@ -12,15 +11,14 @@ import (
 	"github.com/koyo-os/murocami/pkg/notify"
 )
 
-type Agent struct{
-	Dir string
-	Logger *logger.Logger
-	cfg *config.Config
+type Agent struct {
+	Dir        string
+	Logger     *logger.Logger
+	cfg        *config.Config
 	pipeRunner *PipeLineRunner
-	history *history.AgentHistory
-	queue *queue.QueueRunner
-	queueCFG *config.QueueConfig
-	notify *notify.Notifyler
+	queue      *queue.QueueRunner
+	queueCFG   *config.QueueConfig
+	notify     *notify.Notifyler
 }
 
 const ERROR_MESSAGE = `
@@ -34,31 +32,33 @@ func Init(cfg *config.Config) (*Agent, error) {
 
 	logger.Infof("Creating temp for %s", cfg.TempDirName)
 	err := os.Mkdir(cfg.TempDirName, 0755)
-	if err != nil{
-		return nil,err
+	if err != nil {
+		return nil, err
 	}
 
 	quecfg, err := config.InitQueueConfig()
-	if err != nil{
-		logger.Errorf("cant get que config: %v",err)
+	if err != nil {
+		logger.Errorf("cant get que config: %v", err)
 		return nil, err
 	}
 
-	notify, err := notify.Init(cfg)
-	if err != nil{
-		logger.Errorf("cant get history saver: %v", err)
-		return nil, err
+	var n *notify.Notifyler
+	if cfg.NotifyCfg.Send {
+		n, err = notify.Init(cfg)
+		if err != nil {
+			logger.Errorf("cant get notify: %v", err)
+			return nil, err
+		}
 	}
 
 	return &Agent{
-		queue: queue.Init(cfg),
-		queueCFG: quecfg,
-		history: history.Init(cfg),
+		queue:      queue.Init(cfg),
+		queueCFG:   quecfg,
 		pipeRunner: InitPipelineRunner(cfg),
-		notify: notify,
-		cfg: cfg,
-		Logger: logger,
-		Dir: cfg.TempDirName,
+		notify:     n,
+		cfg:        cfg,
+		Logger:     logger,
+		Dir:        cfg.TempDirName,
 	}, nil
 }
 
@@ -67,50 +67,35 @@ func (a *Agent) Run(url string) (bool, error) {
 
 	a.Logger.Infof("starting agent for %s", url)
 
-	if err := utils.CloneRepo(url, a.Dir, a.Logger);err != nil{
+	if err := utils.CloneRepo(url, a.Dir, a.Logger); err != nil {
 		a.Logger.Error(err)
 		okAgent = false
 		return okAgent, err
 	}
 
-	if err := a.RunTests();err != nil{
+	if err := a.RunTests(); err != nil {
 		a.Logger.Error(err)
 		okAgent = false
 	}
 
-	if err := a.RunBuild();err != nil{
+	if err := a.RunBuild(); err != nil {
 		a.Logger.Errorf("cant build: %v", err)
 		okAgent = false
 		return okAgent, err
 	}
 
-	if err := a.RunLint();err != nil{
+	if err := a.RunLint(); err != nil {
 		a.Logger.Errorf("error lint: %v", err)
 		return okAgent, err
 	}
 
 	if a.cfg.UseScpForCD {
-		if err := a.pipeRunner.RunPipeline();err != nil{
-			a.Logger.Errorf("error run pipeline: %v",err)
+		if err := a.pipeRunner.RunPipeline(); err != nil {
+			a.Logger.Errorf("error run pipeline: %v", err)
 			okAgent = false
 			return okAgent, err
 		}
 	}
-
-	if a.cfg.HistoryCfg.Save {
-		var message string
-
-		if okAgent {
-			message = SUCCESS_MESSAGE
-		} else {
-			message = ERROR_MESSAGE
-		}
-
-		if err := a.history.Save(okAgent, message);err != nil{
-			a.Logger.Errorf("cant save history: %v",err)
-		}
-	}
-
 	return okAgent, nil
 }
 
@@ -120,7 +105,7 @@ func (a *Agent) RunTests() error {
 	cmd := exec.Command("go", "test", "./...")
 	cmd.Dir = a.Dir
 	output, err := cmd.CombinedOutput()
-	if err != nil{
+	if err != nil {
 		a.Logger.Error(err)
 	}
 
@@ -133,8 +118,8 @@ func (a *Agent) RunBuild() error {
 
 	cmd := exec.Command("go", "build", "-o", a.cfg.OutputPoint, a.cfg.InputPoint)
 	cmd.Dir = a.cfg.TempDirName
-	output,err := cmd.CombinedOutput()
-	if err != nil{
+	output, err := cmd.CombinedOutput()
+	if err != nil {
 		a.Logger.Error(err)
 		return err
 	}
@@ -148,9 +133,9 @@ func (a *Agent) RunLint() error {
 
 	cmd := exec.Command("golangci-lint", "run")
 	cmd.Dir = a.Dir
-	output,err := cmd.CombinedOutput()
-	if err != nil{
-		a.Logger.Errorf("cant do lint: %v, with output: %s",err, output)
+	output, err := cmd.CombinedOutput()
+	if err != nil {
+		a.Logger.Errorf("cant do lint: %v, with output: %s", err, output)
 		return err
 	}
 

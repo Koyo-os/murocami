@@ -1,16 +1,13 @@
-port : 8080
-host : "localhost"
-
-temp_dir_name : "murocami-temp"
-input_point : "cmd/main.go"
-output_point : "bin/app"
-scp_for_cd : false
-
-history:
-  send: true
-  file: "history.json"
-use_ui : false
-
-file_history : history.json
-notify_chat_id : -12345567
-static_dir : "web/public/assets"
+port: "8080"
+host: "localhost"
+static_dir: "/static"
+temp_dir_name: "temp"
+input_point: "/input"
+output_point: "/output"
+scp_for_cd: false
+use_ui: true
+notify:
+  send: false 
+  chat_id: 123456789
+  token: "dummy_token"
+  

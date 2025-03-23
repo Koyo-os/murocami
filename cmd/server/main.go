@@ -35,11 +35,15 @@ func main() {
 
 	logger := logger.Init()
 
+	logger.Info("setup config...")
+
 	cfg, err := config.Init()
-	if err != nil{
+	if err != nil {
 		logger.Errorf("cant get config: %v", err)
 		return
 	}
+
+	logger.Info("setup directory...")
 
 	os.Remove(cfg.TempDirName)
 
@@ -47,11 +51,11 @@ func main() {
 
 	h := handler.InitHandler(cfg)
 	mux := http.NewServeMux()
-	
+
 	h.Routes(mux)
 	s.SetHandler(mux)
 
-	go func(){
+	go func() {
 		<-ctx.Done()
 		logger.Info("murocami stopped!")
 		s.Stop(ctx)
@@ -60,7 +64,8 @@ func main() {
 	}()
 
 	err = s.Start()
-	if err != nil && err != http.ErrServerClosed{
-		logger.Errorf("cant run murocami: %v",err)
+	if err != nil && err != http.ErrServerClosed {
+		logger.Errorf("cant run murocami: %v", err)
 	}
 }
+
