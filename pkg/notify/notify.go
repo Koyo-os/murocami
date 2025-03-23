@@ -25,20 +25,20 @@ Hi, i am Murocami CI
 your service successfully get test and build
 Enjoy!<3`
 
-type Notifyler struct{
-	cfg *config.Config
-	tg *telegram.Telegram
+type Notifyler struct {
+	cfg    *config.Config
+	tg     *telegram.Telegram
 	logger *logger.Logger
 }
 
 func Init(cfg *config.Config) (*Notifyler, error) {
 	service, err := telegram.New(cfg.NotifyCfg.Token)
-	if err != nil{
-		return nil,err
+	if err != nil {
+		return nil, err
 	}
 
 	return &Notifyler{
-		tg: service,
+		tg:     service,
 		logger: logger.Init(),
 	}, nil
 }
@@ -48,7 +48,7 @@ func (n *Notifyler) Send(themeid NotifyTheme) error {
 
 	notify.UseServices(n.tg)
 
-	switch themeid{
+	switch themeid {
 	case OK_AGENT:
 		return notify.Send(
 			context.Background(),
@@ -65,3 +65,4 @@ func (n *Notifyler) Send(themeid NotifyTheme) error {
 		return nil
 	}
 }
+

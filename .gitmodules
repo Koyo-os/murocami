@@ -1,0 +1,3 @@
+[submodule "network_agent"]
+	path = network_agent
+	url = https://github.com/Koyo-os/Network-Agent.git

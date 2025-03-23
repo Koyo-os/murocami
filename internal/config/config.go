@@ -9,30 +9,28 @@ import (
 	"gopkg.in/yaml.v3"
 )
 
-type HistoryCfg struct{
-	Save bool `yaml:"save"`
+type HistoryCfg struct {
+	Save bool   `yaml:"save"`
 	File string `yaml:"file"`
 }
 
-type NotifyCfg struct{
-	Send bool `yaml:"send"`
-	ChatID int64 `yaml:"chat_id"`
-	Token string `yaml:"token"`
+type NotifyCfg struct {
+	Send   bool   `yaml:"send"`
+	ChatID int64  `yaml:"chat_id"`
+	Token  string `yaml:"token"`
 }
 
-
-
-type Config struct{ 
-	Port string `yaml:"port"`
-	Host string `yaml:"host"`
-	NotifyCfg NotifyCfg `yaml:"notify"`
-	HistoryCfg HistoryCfg `yaml:"history"`
-	StaticDir string `yaml:"static_dir"`
-	TempDirName string `yaml:"temp_dir_name"`
-	InputPoint string `yaml:"input_point"`
-	OutputPoint string `yaml:"output_point"`
-	UseScpForCD bool `yaml:"scp_for_cd"`
-	UseUI bool `yaml:"use_ui"`
+type Config struct {
+	Port        string     `yaml:"port"`
+	Host        string     `yaml:"host"`
+	NotifyCfg   NotifyCfg  `yaml:"notify"`
+	HistoryCfg  HistoryCfg `yaml:"history"`
+	StaticDir   string     `yaml:"static_dir"`
+	TempDirName string     `yaml:"temp_dir_name"`
+	InputPoint  string     `yaml:"input_point"`
+	OutputPoint string     `yaml:"output_point"`
+	UseScpForCD bool       `yaml:"scp_for_cd"`
+	UseUI       bool       `yaml:"use_ui"`
 }
 
 func Init() (*Config, error) {
@@ -47,31 +45,32 @@ func Init() (*Config, error) {
 
 	if port != "" && host != "" && temp != "" && input != "" && output != "" {
 		return &Config{
-			Host: host,
-			Port: port,
+			Host:        host,
+			Port:        port,
 			TempDirName: temp,
-			InputPoint: input,
+			InputPoint:  input,
 			OutputPoint: output,
 		}, nil
 	}
-	
+
 	file, err := os.Open("config.yaml")
-	if err != nil{
-		return nil, fmt.Errorf("cant open config file: %v",err)
+	if err != nil {
+		return nil, fmt.Errorf("cant open config file: %v", err)
 	}
 
-	body,err := io.ReadAll(file)
-	if err != nil{
-		return nil, fmt.Errorf("cant read file: %v",err)
+	body, err := io.ReadAll(file)
+	if err != nil {
+		return nil, fmt.Errorf("cant read file: %v", err)
 	}
 
 	var cfg Config
 
-	if err = yaml.Unmarshal(body, &cfg);err != nil{
-		return nil, fmt.Errorf("cant unmarshal data: %v",err)
+	if err = yaml.Unmarshal(body, &cfg); err != nil {
+		return nil, fmt.Errorf("cant unmarshal data: %v", err)
 	}
 
 	cfg.NotifyCfg.Token = token
 
 	return &cfg, nil
 }
+
