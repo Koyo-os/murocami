@@ -10,4 +10,7 @@ notify:
   send: false 
   chat_id: 123456789
   token: "dummy_token"
-  
+nagent:
+  use : true
+  host: "localhost"
+  port: 50051

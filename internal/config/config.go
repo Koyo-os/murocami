@@ -9,6 +9,12 @@ import (
 	"gopkg.in/yaml.v3"
 )
 
+type NagentCfg struct {
+	Use  bool   `yaml:"use"`
+	Host string `yaml:"host"`
+	Port int    `yaml:"port"`
+}
+
 type HistoryCfg struct {
 	Save bool   `yaml:"save"`
 	File string `yaml:"file"`
@@ -31,6 +37,7 @@ type Config struct {
 	OutputPoint string     `yaml:"output_point"`
 	UseScpForCD bool       `yaml:"scp_for_cd"`
 	UseUI       bool       `yaml:"use_ui"`
+	Nagent      NagentCfg  `yaml:"nagent"`
 }
 
 func Init() (*Config, error) {
@@ -73,4 +80,3 @@ func Init() (*Config, error) {
 
 	return &cfg, nil
 }
-
