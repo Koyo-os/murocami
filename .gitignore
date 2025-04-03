@@ -1,4 +1,5 @@
 .env
 bin
+temp
 /web/node_modules
 /web/public

@@ -2,8 +2,8 @@ port: "8080"
 host: "localhost"
 static_dir: "/static"
 temp_dir_name: "temp"
-input_point: "/input"
-output_point: "/output"
+input_point: "cmd/main.go"
+output_point: "bin/app"
 scp_for_cd: false
 use_ui: true
 notify:
