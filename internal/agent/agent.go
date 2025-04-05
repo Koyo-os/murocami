@@ -116,7 +116,7 @@ func (a *Agent) RunTests() error {
 func (a *Agent) RunBuild() error {
 	a.Logger.Info("starting build...")
 
-	cmd := exec.Command("go", "build", "-o", a.cfg.OutputPoint, a.cfg.InputPoint)
+	cmd := exec.Command("go", "build", "-o", a.cfg.BuildCfg.Output, a.cfg.BuildCfg.Input)
 	cmd.Dir = a.cfg.TempDirName
 	output, err := cmd.CombinedOutput()
 	if err != nil {

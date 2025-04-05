@@ -40,8 +40,7 @@ type (
 		HistoryCfg  HistoryCfg `yaml:"history"`
 		StaticDir   string     `yaml:"static_dir"`
 		TempDirName string     `yaml:"temp_dir_name"`
-		InputPoint  string     `yaml:"input_point"`
-		OutputPoint string     `yaml:"output_point"`
+		BuildCfg    BuildCfg   `yaml:"build"`
 		UseScpForCD bool       `yaml:"scp_for_cd"`
 		UseUI       bool       `yaml:"use_ui"`
 		Nagent      NagentCfg  `yaml:"nagent"`
