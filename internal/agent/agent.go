@@ -96,10 +96,12 @@ func (a *Agent) Run(url string, mList []string) (bool, error) {
 		okAgent = false
 	}
 
-	if err := a.RunBuild(); err != nil {
-		a.Logger.Errorf("cant build: %v", err)
-		okAgent = false
-		return okAgent, err
+	if mustBuild(a.cfg.BuildCfg.ExcludeFiles, mList) {
+		if err := a.RunBuild(); err != nil {
+			a.Logger.Errorf("cant run build: %v", err)
+			okAgent = false
+			return okAgent, err
+		}
 	}
 
 	if err := a.RunLint(); err != nil {
