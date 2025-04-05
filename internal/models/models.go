@@ -1,19 +1,20 @@
 package models
 
 type WebhookPayload struct {
-    Ref        string     `json:"ref"`
-    Repository Repository `json:"repository"`
-    Commits    []Commit   `json:"commits"`
+	Ref        string     `json:"ref"`
+	Repository Repository `json:"repository"`
+	Commits    []Commit   `json:"commits"`
 }
 
 type Repository struct {
-    Name     string `json:"name"`
-    HTMLURL  string `json:"html_url"`
-    CloneURL string `json:"clone_url"`
+	Name     string `json:"name"`
+	HTMLURL  string `json:"html_url"`
+	CloneURL string `json:"clone_url"`
 }
 
 type Commit struct {
-    ID      string `json:"id"`
-    Message string `json:"message"`
+	ID       string   `json:"id"`
+	Added    []string `json:"added"`
+	Removed  []string `json:"removed"`
+	Modified []string `json:"modified"`
 }
-

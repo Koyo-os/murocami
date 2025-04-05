@@ -62,8 +62,6 @@ func Init() (*Config, error) {
 			Host:        host,
 			Port:        port,
 			TempDirName: temp,
-			InputPoint:  input,
-			OutputPoint: output,
 		}, nil
 	}
 

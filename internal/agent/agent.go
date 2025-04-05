@@ -12,13 +12,14 @@ import (
 )
 
 type Agent struct {
-	Dir        string
-	Logger     *logger.Logger
-	cfg        *config.Config
-	pipeRunner *PipeLineRunner
-	queue      *queue.QueueRunner
-	queueCFG   *config.QueueConfig
-	notify     *notify.Notifyler
+	Dir          string
+	Logger       *logger.Logger
+	cfg          *config.Config
+	pipeRunner   *PipeLineRunner
+	queue        *queue.QueueRunner
+	queueCFG     *config.QueueConfig
+	notify       *notify.Notifyler
+	modifiedList []string
 }
 
 const ERROR_MESSAGE = `
@@ -27,7 +28,7 @@ CI process not complited`
 const SUCCESS_MESSAGE = `
 CI process successfully complited`
 
-func Init(cfg *config.Config) (*Agent, error) {
+func Init(cfg *config.Config, mList []string) (*Agent, error) {
 	logger := logger.Init()
 
 	logger.Infof("Creating temp for %s", cfg.TempDirName)
@@ -52,13 +53,14 @@ func Init(cfg *config.Config) (*Agent, error) {
 	}
 
 	return &Agent{
-		queue:      queue.Init(cfg),
-		queueCFG:   quecfg,
-		pipeRunner: InitPipelineRunner(cfg),
-		notify:     n,
-		cfg:        cfg,
-		Logger:     logger,
-		Dir:        cfg.TempDirName,
+		queue:        queue.Init(cfg),
+		queueCFG:     quecfg,
+		pipeRunner:   InitPipelineRunner(cfg),
+		notify:       n,
+		cfg:          cfg,
+		Logger:       logger,
+		Dir:          cfg.TempDirName,
+		modifiedList: mList,
 	}, nil
 }
 
