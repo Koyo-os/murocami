@@ -12,14 +12,13 @@ import (
 )
 
 type Agent struct {
-	Dir          string
-	Logger       *logger.Logger
-	cfg          *config.Config
-	pipeRunner   *PipeLineRunner
-	queue        *queue.QueueRunner
-	queueCFG     *config.QueueConfig
-	notify       *notify.Notifyler
-	modifiedList []string
+	Dir        string
+	Logger     *logger.Logger
+	cfg        *config.Config
+	pipeRunner *PipeLineRunner
+	queue      *queue.QueueRunner
+	queueCFG   *config.QueueConfig
+	notify     *notify.Notifyler
 }
 
 const ERROR_MESSAGE = `
@@ -28,7 +27,7 @@ CI process not complited`
 const SUCCESS_MESSAGE = `
 CI process successfully complited`
 
-func Init(cfg *config.Config, mList []string) (*Agent, error) {
+func Init(cfg *config.Config) (*Agent, error) {
 	logger := logger.Init()
 
 	logger.Infof("Creating temp for %s", cfg.TempDirName)
@@ -53,18 +52,35 @@ func Init(cfg *config.Config, mList []string) (*Agent, error) {
 	}
 
 	return &Agent{
-		queue:        queue.Init(cfg),
-		queueCFG:     quecfg,
-		pipeRunner:   InitPipelineRunner(cfg),
-		notify:       n,
-		cfg:          cfg,
-		Logger:       logger,
-		Dir:          cfg.TempDirName,
-		modifiedList: mList,
+		queue:      queue.Init(cfg),
+		queueCFG:   quecfg,
+		pipeRunner: InitPipelineRunner(cfg),
+		notify:     n,
+		cfg:        cfg,
+		Logger:     logger,
+		Dir:        cfg.TempDirName,
 	}, nil
 }
 
-func (a *Agent) Run(url string) (bool, error) {
+func mustBuild(exclude, mlist []string) bool {
+	must := false
+	for _, e := range mlist {
+		exist := false
+		for _, l := range exclude {
+			if e == l {
+				exist = true
+			}
+		}
+
+		if !exist {
+			must = true
+		}
+	}
+
+	return must
+}
+
+func (a *Agent) Run(url string, mList []string) (bool, error) {
 	okAgent := true
 
 	a.Logger.Infof("starting agent for %s", url)
