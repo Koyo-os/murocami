@@ -9,36 +9,44 @@ import (
 	"gopkg.in/yaml.v3"
 )
 
-type NagentCfg struct {
-	Use  bool   `yaml:"use"`
-	Host string `yaml:"host"`
-	Port int    `yaml:"port"`
-}
+type (
+	NagentCfg struct {
+		Use  bool   `yaml:"use"`
+		Host string `yaml:"host"`
+		Port int    `yaml:"port"`
+	}
 
-type HistoryCfg struct {
-	Save bool   `yaml:"save"`
-	File string `yaml:"file"`
-}
+	HistoryCfg struct {
+		Save bool   `yaml:"save"`
+		File string `yaml:"file"`
+	}
 
-type NotifyCfg struct {
-	Send   bool   `yaml:"send"`
-	ChatID int64  `yaml:"chat_id"`
-	Token  string `yaml:"token"`
-}
+	NotifyCfg struct {
+		Send   bool   `yaml:"send"`
+		ChatID int64  `yaml:"chat_id"`
+		Token  string `yaml:"token"`
+	}
 
-type Config struct {
-	Port        string     `yaml:"port"`
-	Host        string     `yaml:"host"`
-	NotifyCfg   NotifyCfg  `yaml:"notify"`
-	HistoryCfg  HistoryCfg `yaml:"history"`
-	StaticDir   string     `yaml:"static_dir"`
-	TempDirName string     `yaml:"temp_dir_name"`
-	InputPoint  string     `yaml:"input_point"`
-	OutputPoint string     `yaml:"output_point"`
-	UseScpForCD bool       `yaml:"scp_for_cd"`
-	UseUI       bool       `yaml:"use_ui"`
-	Nagent      NagentCfg  `yaml:"nagent"`
-}
+	BuildCfg struct {
+		Input        string   `yaml:"inout"`
+		Output       string   `yaml:"output"`
+		ExcludeFiles []string `yaml:"exclude_files"`
+	}
+
+	Config struct {
+		Port        string     `yaml:"port"`
+		Host        string     `yaml:"host"`
+		NotifyCfg   NotifyCfg  `yaml:"notify"`
+		HistoryCfg  HistoryCfg `yaml:"history"`
+		StaticDir   string     `yaml:"static_dir"`
+		TempDirName string     `yaml:"temp_dir_name"`
+		InputPoint  string     `yaml:"input_point"`
+		OutputPoint string     `yaml:"output_point"`
+		UseScpForCD bool       `yaml:"scp_for_cd"`
+		UseUI       bool       `yaml:"use_ui"`
+		Nagent      NagentCfg  `yaml:"nagent"`
+	}
+)
 
 func Init() (*Config, error) {
 	godotenv.Load(".env")
