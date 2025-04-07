@@ -106,6 +106,18 @@ func (a *Agent) Run(url string, mList []string) (bool, error) {
 
 	if err := a.RunLint(); err != nil {
 		a.Logger.Errorf("error lint: %v", err)
+		a.Logger.Info("start install this...")
+
+		cmd := exec.Command("go", "install", "github.com/golangci/golangci-lint/cmd/golangci-lint@latest")
+		cmd.Dir = a.cfg.TempDirName
+		if err = cmd.Run(); err != nil {
+			a.Logger.Error("could not install(")
+		} else {
+			if err := a.RunLint(); err != nil {
+				a.Logger.Errorf("error run linter anyway: %v", err)
+			}
+		}
+
 		return okAgent, err
 	}
 
